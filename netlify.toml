@@ -4,15 +4,12 @@
   base = "app"
 
 [context.production]
-  environment = { 
-    NPM_FLAGS = "--ignore-scripts", 
-    YARN_FLAGS = "--immutable" 
-  }
-  
-[build.environment]
-  NODE_VERSION = "18.20.2" # LTS version
-  YARN_VERSION = "1.22.22"
-  
+  [context.production.environment]
+    NPM_FLAGS = "--ignore-scripts"
+    YARN_FLAGS = "--immutable"
+    NODE_VERSION = "18.20.2"
+    YARN_VERSION = "1.22.22"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
