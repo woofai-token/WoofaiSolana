@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Connection, PublicKey } from '@solana/web3.js';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { WalletProvider, useWallet } from '@solana/wallet-adapter-react';
-import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import {
+  Connection,
+  PublicKey,
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+} from '@solana/web3.js';
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
+import {
+  WalletProvider,
+  useWallet,
+} from '@solana/wallet-adapter-react';
+import {
+  WalletModalProvider,
+  WalletMultiButton,
+} from '@solana/wallet-adapter-react-ui';
+
+require('@solana/wallet-adapter-react-ui/styles.css'); // Make sure this is included
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const PRESALE_WALLET = new PublicKey('GWkwfF8BbA591V4ZFTLDJJ9eRy5Mhp2Z9zNBNFvf6cgy');
 const TOKENS_PER_SOL = 10000000; // 10M per SOL
 
 function App() {
-  const { publicKey, connect, disconnect } = useWallet();
+  const { publicKey, disconnect, sendTransaction } = useWallet();
   const [solAmount, setSolAmount] = useState(0);
   const [tokenOutput, setTokenOutput] = useState(0);
 
@@ -25,7 +42,7 @@ function App() {
       SystemProgram.transfer({
         fromPubkey: publicKey,
         toPubkey: PRESALE_WALLET,
-        lamports: solAmount * LAMPORTS_PER_SOL, // Convert SOL to lamports
+        lamports: solAmount * LAMPORTS_PER_SOL,
       })
     );
 
@@ -42,7 +59,11 @@ function App() {
   return (
     <div className="container">
       <header>
-        <img src="https://gateway.pinata.cloud/ipfs/bafybeih3iwshjpvlxlsbg6mazrv77qu3inzpmixvznyaihqa2ut674nklu" alt="WFAI Logo" className="logo" />
+        <img
+          src="https://gateway.pinata.cloud/ipfs/bafybeih3iwshjpvlxlsbg6mazrv77qu3inzpmixvznyaihqa2ut674nklu"
+          alt="WFAI Logo"
+          className="logo"
+        />
         <h1>WFAI Token Presale</h1>
       </header>
 
@@ -54,8 +75,13 @@ function App() {
               <WalletMultiButton />
             ) : (
               <div>
-                <p>Connected: {publicKey.toString().slice(0, 6)}...{publicKey.toString().slice(-4)}</p>
-                <button onClick={() => disconnect()} className="wallet-btn">Disconnect</button>
+                <p>
+                  Connected: {publicKey.toString().slice(0, 6)}...
+                  {publicKey.toString().slice(-4)}
+                </p>
+                <button onClick={disconnect} className="wallet-btn">
+                  Disconnect
+                </button>
               </div>
             )}
           </div>
@@ -69,10 +95,14 @@ function App() {
             step="0.1"
           />
           <div className="conversion">
-            <strong>Exchange Rate:</strong> 1 SOL = 10,000,000 WFAI<br />
-            <strong>You will receive:</strong> <span id="tokenOutput">{tokenOutput}</span> WFAI
+            <strong>Exchange Rate:</strong> 1 SOL = 10,000,000 WFAI
+            <br />
+            <strong>You will receive:</strong>{' '}
+            <span id="tokenOutput">{tokenOutput}</span> WFAI
           </div>
-          <button className="buy-btn" onClick={buyTokens}>Buy WFAI Now</button>
+          <button className="buy-btn" onClick={buyTokens}>
+            Buy WFAI Now
+          </button>
 
           <div className="timer">
             ⏳ Presale ends in: <span id="countdown"></span>
