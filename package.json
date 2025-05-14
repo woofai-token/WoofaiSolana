@@ -17,7 +17,7 @@
     "react-icons": "^4.6.0"
   },
   "devDependencies": {
-    "typescript": "^4.9.5",  // Downgrade to TypeScript 4.9.5 to avoid peer dependency conflict
+    "typescript": "^4.9.5",  
     "vite-plugin-svgr": "^2.3.0",
     "vite-plugin-react": "^3.0.0"
   },
