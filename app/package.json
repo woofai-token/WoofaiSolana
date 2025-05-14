@@ -2,7 +2,7 @@
   "name": "app",
   "version": "1.0.0",
   "scripts": {
-    "build": "vite build", // or your actual build command
+    "build": "vite build",
     "dev": "vite dev"
   },
   "dependencies": {
