@@ -1,0 +1,9 @@
+[build]
+  command = "yarn netlify-build"
+  publish = "dist"
+  base = "app" # If using Remix/Hydrogen
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
