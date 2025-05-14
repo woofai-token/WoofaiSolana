@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import {
-  Connection,
-  PublicKey,
-  Transaction,
-  SystemProgram,
-  LAMPORTS_PER_SOL,
-} from '@solana/web3.js';
-import { useWallet, WalletProvider } from '@solana/wallet-adapter-react';
-import {
-  WalletModalProvider,
-  WalletMultiButton,
-} from '@solana/wallet-adapter-react-ui';
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { useMemo } from 'react';
+import { Connection, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-standard';
+import { WalletProvider, useWallet } from '@solana/wallet-standard-react';
+import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-standard-react-ui';
 
-require('@solana/wallet-adapter-react-ui/styles.css');
-
-const connection = new Connection('https://api.mainnet-beta.solana.com');
+const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const PRESALE_WALLET = new PublicKey('GWkwfF8BbA591V4ZFTLDJJ9eRy5Mhp2Z9zNBNFvf6cgy');
-const TOKENS_PER_SOL = 10000000;
+const TOKENS_PER_SOL = 10000000; // 10M per SOL
+const LAMPORTS_PER_SOL = 1000000000; // Conversion factor
 
-function PresaleApp() {
-  const { publicKey, sendTransaction, disconnect } = useWallet();
+function App() {
+  const { publicKey, connect, disconnect } = useWallet();
   const [solAmount, setSolAmount] = useState(0);
   const [tokenOutput, setTokenOutput] = useState(0);
 
@@ -46,8 +32,10 @@ function PresaleApp() {
 
     try {
       const signature = await sendTransaction(transaction, connection);
-      alert(`Transaction successful! Signature: ${signature}`);
+      console.log('Transaction sent:', signature);
+      alert('Transaction successful!');
     } catch (error) {
+      console.error('Transaction failed:', error);
       alert('Transaction failed!');
     }
   };
@@ -55,39 +43,50 @@ function PresaleApp() {
   return (
     <div className="container">
       <header>
-        <img src="https://gateway.pinata.cloud/ipfs/bafybeih3iwshjpvlxlsbg6mazrv77qu3inzpmixvznyaihqa2ut674nklu" className="logo" />
+        <img src="https://gateway.pinata.cloud/ipfs/bafybeih3iwshjpvlxlsbg6mazrv77qu3inzpmixvznyaihqa2ut674nklu" alt="WFAI Logo" className="logo" />
         <h1>WFAI Token Presale</h1>
       </header>
-      <div className="card">
-        <WalletMultiButton />
-        {publicKey && (
+
+      <div className="grid">
+        <div className="card">
+          <h2>💰 Presale</h2>
           <div>
-            <p>Connected: {publicKey.toBase58()}</p>
-            <button onClick={disconnect}>Disconnect</button>
+            {!publicKey ? (
+              <WalletMultiButton />
+            ) : (
+              <div>
+                <p>Connected: {publicKey.toString().slice(0, 6)}...{publicKey.toString().slice(-4)}</p>
+                <button onClick={() => disconnect()}>Disconnect</button>
+              </div>
+            )}
           </div>
-        )}
-        <input
-          type="number"
-          value={solAmount}
-          onChange={(e) => setSolAmount(parseFloat(e.target.value))}
-          placeholder="Enter SOL Amount"
-        />
-        <div>
-          <p>Exchange Rate: 1 SOL = 10,000,000 WFAI</p>
-          <p>You will receive: {tokenOutput} WFAI</p>
+
+          <input
+            type="number"
+            value={solAmount}
+            onChange={(e) => setSolAmount(Number(e.target.value))}
+            placeholder="Enter SOL Amount"
+            min="0"
+            step="0.1"
+          />
+          <div className="conversion">
+            <strong>Exchange Rate:</strong> 1 SOL = 10,000,000 WFAI<br />
+            <strong>You will receive:</strong> <span>{tokenOutput}</span> WFAI
+          </div>
+          <button className="buy-btn" onClick={buyTokens}>Buy WFAI Now</button>
         </div>
-        <button onClick={buyTokens}>Buy WFAI Now</button>
       </div>
     </div>
   );
 }
 
 function WalletApp() {
-  const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
+  const wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];
+
   return (
     <WalletProvider wallets={wallets} autoConnect>
       <WalletModalProvider>
-        <PresaleApp />
+        <App />
       </WalletModalProvider>
     </WalletProvider>
   );
