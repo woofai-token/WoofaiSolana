@@ -1,25 +1,103 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { WalletProvider, useWallet } from '@solana/wallet-adapter-react';
+import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+
+const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+const PRESALE_WALLET = new PublicKey('GWkwfF8BbA591V4ZFTLDJJ9eRy5Mhp2Z9zNBNFvf6cgy');
+const TOKENS_PER_SOL = 10000000; // 10M per SOL
 
 function App() {
+  const { publicKey, connect, disconnect } = useWallet();
+  const [solAmount, setSolAmount] = useState(0);
+  const [tokenOutput, setTokenOutput] = useState(0);
+
+  useEffect(() => {
+    setTokenOutput(solAmount * TOKENS_PER_SOL);
+  }, [solAmount]);
+
+  const buyTokens = async () => {
+    if (!publicKey) return alert('Please connect your wallet');
+
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: PRESALE_WALLET,
+        lamports: solAmount * LAMPORTS_PER_SOL, // Convert SOL to lamports
+      })
+    );
+
+    try {
+      const signature = await sendTransaction(transaction, connection);
+      console.log('Transaction sent:', signature);
+      alert('Transaction successful!');
+    } catch (error) {
+      console.error('Transaction failed:', error);
+      alert('Transaction failed!');
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="container">
+      <header>
+        <img src="https://gateway.pinata.cloud/ipfs/bafybeih3iwshjpvlxlsbg6mazrv77qu3inzpmixvznyaihqa2ut674nklu" alt="WFAI Logo" className="logo" />
+        <h1>WFAI Token Presale</h1>
       </header>
+
+      <div className="grid">
+        <div className="card">
+          <h2>💰 Presale</h2>
+          <div>
+            {!publicKey ? (
+              <WalletMultiButton />
+            ) : (
+              <div>
+                <p>Connected: {publicKey.toString().slice(0, 6)}...{publicKey.toString().slice(-4)}</p>
+                <button onClick={() => disconnect()} className="wallet-btn">Disconnect</button>
+              </div>
+            )}
+          </div>
+
+          <input
+            type="number"
+            value={solAmount}
+            onChange={(e) => setSolAmount(Number(e.target.value))}
+            placeholder="Enter SOL Amount"
+            min="0"
+            step="0.1"
+          />
+          <div className="conversion">
+            <strong>Exchange Rate:</strong> 1 SOL = 10,000,000 WFAI<br />
+            <strong>You will receive:</strong> <span id="tokenOutput">{tokenOutput}</span> WFAI
+          </div>
+          <button className="buy-btn" onClick={buyTokens}>Buy WFAI Now</button>
+
+          <div className="timer">
+            ⏳ Presale ends in: <span id="countdown"></span>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>📊 Tokenomics</h2>
+          <canvas id="tokenomicsChart"></canvas>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default App;
+function WalletApp() {
+  const wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];
+
+  return (
+    <WalletProvider wallets={wallets} autoConnect>
+      <WalletModalProvider>
+        <App />
+      </WalletModalProvider>
+    </WalletProvider>
+  );
+}
+
+export default WalletApp;
