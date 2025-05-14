@@ -1,0 +1,16 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "vite build", // or your actual build command
+    "dev": "vite dev"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^5.2.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}
