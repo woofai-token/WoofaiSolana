@@ -17,6 +17,7 @@
     "react-icons": "^4.6.0"
   },
   "devDependencies": {
+    "typescript": "^5.3.3",  // Ensure this version is compatible with your project
     "vite-plugin-svgr": "^2.3.0",
     "vite-plugin-react": "^3.0.0"
   },
