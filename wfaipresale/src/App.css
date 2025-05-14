@@ -1,38 +1,116 @@
-.App {
+:root {
+  --primary: #00ff88;
+  --secondary: #17002e;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: var(--secondary);
+  color: white;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.card {
+  background: linear-gradient(145deg, #1a003a, #0d001f);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.wallet-btn, .buy-btn {
+  background: var(--primary);
+  color: var(--secondary);
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin: 10px;
+}
+
+.wallet-btn:hover, .buy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+}
+
+input[type="number"] {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--primary);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 16px;
+  width: 100%;
+  margin: 15px 0;
+}
+
+.timer {
+  font-size: 1.5em;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+#tokenomicsChart {
+  margin-top: 30px;
+  max-height: 400px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--secondary);
+  padding: 30px;
+  border-radius: 15px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.close {
+  color: var(--primary);
+  font-size: 24px;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
