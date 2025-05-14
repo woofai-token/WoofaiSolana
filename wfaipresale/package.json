@@ -23,7 +23,13 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
      "crypto": "npm:crypto-browserify",
-    "crypto-browserify": "^3.12.0"
+    "crypto-browserify": "^3.12.0",
+     "stream": "npm:stream-browserify",
+    "buffer": "npm:buffer",
+  "process": "npm:process",
+  "assert": "npm:assert",
+  "util": "npm:util",
+  "path": "npm:path-browserify"
   },
   "scripts": {
     "start": "react-scripts start",
