@@ -1,5 +1,5 @@
 [build]
-  command = "cd App && yarn install && yarn build"
+  command = "cd app && yarn install && yarn build"
   publish = "app/dist"
   base = "/"
 
