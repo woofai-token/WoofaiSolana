@@ -1,7 +1,7 @@
 [build]
-  command = "yarn install && yarn build"
+  command = "cd App && yarn install && yarn build"
   publish = "app/dist"
-  base = "app"
+  base = "/"
 
 [context.production]
   [context.production.environment]
